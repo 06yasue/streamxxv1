@@ -5,22 +5,23 @@
     margin: 0;
 }
 
-/* HEADER STICKY & CENTERED */
+/* 1. HEADER STICKY (Pasti ikut saat scroll ke bawah) */
 .headerFlat {
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 1000; /* Z-index tinggi biar gak ketimpa video */
     display: flex;
     align-items: center;
-    justify-content: center; /* Logo di tengah */
+    justify-content: center;
     padding: 12px 15px;
-    background-color: #161a1d; /* Warna background khusus header (Dark Slate) */
+    background-color: #161a1d;
     border-bottom: 1px solid #2b2b2b;
     box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    width: 100%;
 }
 
 .logoImageContainer {
-    max-height: 45px; /* Logo diperbesar dari 30px ke 45px */
+    max-height: 45px;
     width: auto;
     object-fit: contain;
 }
@@ -28,40 +29,50 @@
 .fallbackSiteText {
     font-weight: 800;
     font-size: 22px;
-    color: #0288d1; /* Warna teks biru serasi dengan tombol download */
+    color: #0288d1;
     letter-spacing: 0.5px;
+    margin: 0;
 }
 
-/* CONTAINER KONTEN (Di bawah Header) */
+/* 2. MEDIA QUERIES LENGKAP (Ponsel vs Desktop) */
 .mainLayoutContainer {
     width: 100%;
-    padding: 0;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
-@media (min-width: 992px) {
+/* Aturan untuk Layar Besar (Tablet & Desktop) */
+@media (min-width: 768px) {
     .mainLayoutContainer {
-        max-width: 900px;
-        padding-bottom: 30px;
+        max-width: 800px; /* Dikunci biar gak luber ke samping */
+        padding-top: 25px;
+        padding-bottom: 50px;
+    }
+    
+    .playerAreaWrapper {
+        border-radius: 8px; /* Sudut sedikit melengkung di desktop biar manis */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    .infoSection {
+        padding: 25px 0; /* Padding kiri-kanan dihapus karena container udah menahan */
     }
 }
 
-/* ADS FLOATING AREA (Atas Video) */
+/* 3. AREA IKLAN & VIDEO */
 .adsFloatingWrapper {
     width: 100%;
     display: flex;
     justify-content: center;
     text-align: center;
     padding: 15px 0;
-    background: #121212;
+    background: transparent;
 }
 
-/* VIDEO PLAYER WRAPPER */
 .playerAreaWrapper {
     width: 100%;
     background: #000;
-    margin: 0;
-    padding: 0;
     position: relative;
     overflow: hidden;
 }
@@ -72,9 +83,9 @@
     position: relative;
 }
 
-/* INFO KONTEN */
+/* 4. DETAIL KONTEN */
 .infoSection {
-    padding: 20px 15px;
+    padding: 20px 15px; /* Padding default untuk ponsel */
 }
 
 .titleLineEllipsis {
@@ -95,11 +106,11 @@
     margin-bottom: 25px;
 }
 
-/* TOMBOL DOWNLOAD (Serasi dengan tema, tidak merah) */
+/* 5. TOMBOL DOWNLOAD (Border + Efek Gerak Klik) */
 .downloadBtnFlatDesign {
-    background-color: #0288d1; /* Warna Biru Premium CTA */
-    color: #fff;
-    border: none;
+    background-color: transparent;
+    color: #0288d1;
+    border: 2px solid #0288d1; /* Border biru premium */
     padding: 15px;
     width: 100%;
     font-weight: bold;
@@ -108,22 +119,31 @@
     justify-content: center;
     gap: 10px;
     text-decoration: none;
-    border-radius: 0 !important; /* Tetap flat anti border-radius */
     margin-bottom: 30px;
-    transition: background-color 0.3s;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Bikin transisi mulus */
 }
 
+/* Saat di-hover (diarahkan kursor) */
 .downloadBtnFlatDesign:hover {
-    background-color: #026aa3; /* Sedikit gelap saat ditekan/hover */
+    background-color: #0288d1;
     color: #fff;
     text-decoration: none;
 }
 
-/* SLOT IKLAN BAWAH (Dengan Garis Pemisah) */
+/* EFEK GERAK SAAT DIKLIK (Menciut ke dalam) */
+.downloadBtnFlatDesign:active {
+    transform: scale(0.96); 
+    background-color: #026aa3;
+    border-color: #026aa3;
+    color: #fff;
+}
+
+/* 6. GARIS PEMISAH IKLAN */
 .nativeAdsBelowDetails {
     width: 100%;
     min-height: 100px;
     margin-top: 10px;
     padding-top: 25px;
-    border-top: 1px dashed #333; /* GARIS PEMISAH ELEGAN */
+    border-top: 1px dashed #333; /* Garis pembatas */
 }
