@@ -3,11 +3,10 @@ import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 
-// GANTI FUNGSI INI SAJA DI app/[videoId]/page.js
+// GANTI FUNGSI INI DI app/[videoId]/page.js
 export async function generateMetadata({ params }) {
   const { videoId } = await params;
   
-  // Ambil data video & pengaturan situs sekaligus
   const [vRes, sRes] = await Promise.all([
     supabase.from('videos').select('*').eq('video_id', videoId).single(),
     supabase.from('settings').select('*').eq('id', 1).single()
@@ -19,28 +18,21 @@ export async function generateMetadata({ params }) {
   if (!video) return { title: 'Video Tidak Ditemukan' };
 
   const siteName = settings?.site_name || 'WebVideoKu';
-  const fullTitle = `${video.title} - ${siteName}`;
   const description = `Tonton video ${video.title} secara gratis di ${siteName}.`;
-  
-  // Pastikan URL aman
-  let baseUrl = 'https://streamxxv1.vercel.app';
-  if (settings?.base_url) {
-    baseUrl = settings.base_url.startsWith('http') ? settings.base_url : `https://${settings.base_url}`;
-  }
 
   return {
-    title: fullTitle,
+    title: video.title, // Cukup judul videonya aja, gak bakal double lagi!
     description: description,
     
-    // INI OBATNYA: Maksa Next.js pakai URL spesifik video untuk canonical
+    // Paksa URL merujuk ke halaman video ini secara spesifik
     alternates: {
       canonical: `/${videoId}`, 
     },
     
     openGraph: {
-      title: fullTitle,
+      title: video.title, // Judul bersih untuk sosmed
       description: description,
-      url: `${baseUrl}/${videoId}`,
+      url: `/${videoId}`, // Bot sosmed bakal fokus ke link ini
       siteName: siteName,
       images: [
         {
@@ -54,12 +46,13 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: 'summary_large_image',
-      title: fullTitle,
+      title: video.title,
       description: description,
       images: [video.thumbnail_url],
     },
   };
 }
+
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
