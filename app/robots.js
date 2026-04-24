@@ -1,40 +1,66 @@
-export default function robots() {
-  const baseUrl = 'https://streamxxv1.vercel.app';
+import { supabase } from '../lib/supabaseClient';
+
+export default async function robots() {
+  const { data: settings } = await supabase
+    .from('settings')
+    .select('*')
+    .eq('id', 1)
+    .single();
+
+  let baseUrl = 'https://streamxxv1.vercel.app';
+
+  if (settings?.base_url) {
+    baseUrl = settings.base_url.startsWith('http')
+      ? settings.base_url
+      : `https://${settings.base_url}`;
+  }
 
   return {
     rules: [
       {
-        // Akses global buat Google, Bing, Yahoo, dll
         userAgent: '*',
         allow: '/',
+
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/dashboard/',
+          '/login/',
+          '/private/',
+          '/download/private/',
+        ],
       },
+
+      // Googlebot khusus
       {
-        // Bot khusus Facebook, Instagram, Messenger, WhatsApp
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+        ],
+      },
+
+      // Facebook crawler
+      {
         userAgent: 'facebookexternalhit',
         allow: '/',
       },
+
+      // Twitter crawler
       {
-        // Bot khusus Twitter / X
         userAgent: 'Twitterbot',
         allow: '/',
       },
+
+      // WhatsApp crawler
       {
-        // Bot khusus Telegram
-        userAgent: 'TelegramBot',
+        userAgent: 'WhatsApp',
         allow: '/',
       },
-      {
-        // Bot khusus LinkedIn
-        userAgent: 'LinkedInBot',
-        allow: '/',
-      },
-      {
-        // Bot khusus Discord
-        userAgent: 'Discordbot',
-        allow: '/',
-      }
     ],
-    // Kasih tau bot lokasi sitemap lo sekalian biar SEO makin mantap
+
     sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }
