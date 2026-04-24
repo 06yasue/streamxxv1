@@ -16,7 +16,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="navbar navbar-inverse" style={{ borderRadius: 0, marginBottom: '25px', border: 'none', background: '#1a1a1a', boxShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+    <nav className="navbar navbar-inverse" style={{ background: '#1a1a1a', boxShadow: '0 2px 10px rgba(0,0,0,0.5)', margin: 0, padding: 0, width: '100%' }}>
       <div className="container-custom">
         <div className="navbar-header">
           <button type="button" className="navbar-toggle" onClick={() => setIsOpen(!isOpen)} style={{ border: 'none' }}>
@@ -24,29 +24,29 @@ export default function Navbar() {
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
           </button>
-          <Link href="/" className="navbar-brand" style={{ color: '#e50914', fontWeight: 'bold', fontSize: '22px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Link href="/" className="navbar-brand" style={{ color: '#e50914', fontWeight: '800', fontSize: '24px', display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '0.5px' }}>
             <span className="material-icons notranslate" translate="no">movie</span> {siteName}
           </Link>
         </div>
         <div className={`collapse navbar-collapse ${isOpen ? 'in' : ''}`}>
           <ul className="nav navbar-nav navbar-right">
             <li>
-              <Link href="/" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Link href="/" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
                 <span className="material-icons notranslate" translate="no" style={{ fontSize: '18px' }}>home</span> Beranda
               </Link>
             </li>
             <li>
-              <Link href="/list" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Link href="/list" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
                 <span className="material-icons notranslate" translate="no" style={{ fontSize: '18px' }}>view_list</span> List Video
               </Link>
             </li>
             <li>
-              <Link href="/upload" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Link href="/upload" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
                 <span className="material-icons notranslate" translate="no" style={{ fontSize: '18px' }}>cloud_upload</span> Upload
               </Link>
             </li>
             <li>
-              <Link href="/settings" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Link href="/settings" style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
                 <span className="material-icons notranslate" translate="no" style={{ fontSize: '18px' }}>settings</span> Setting
               </Link>
             </li>
