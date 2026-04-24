@@ -6,12 +6,14 @@ import ClientInteractionHandler from './ClientInteractionHandler';
 export async function generateMetadata({ params }) {
   const { videoId } = params;
 
-  const [vRes, sRes] = await Promise.all([
-    supabase
-      .from('videos')
-      .select('*')
-      .eq('video_id', videoId)
-      .single(),
+  const { data: video, error } = await supabase
+  .from('videos')
+  .select('*')
+  .eq('video_id', videoId.trim())
+  .maybeSingle();
+
+console.log(error);
+console.log(video);
 
     supabase
       .from('settings')
