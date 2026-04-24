@@ -16,15 +16,15 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="navbar navbar-inverse" style={{ background: '#1a1a1a', boxShadow: '0 2px 10px rgba(0,0,0,0.5)', width: '100%' }}>
-      <div className="container-custom">
+    <nav className="navbar navbar-inverse" style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+      <div className="container-custom" style={{ paddingTop: '0 !important', paddingBottom: '0 !important' }}>
         <div className="navbar-header">
           <button type="button" className="navbar-toggle" onClick={() => setIsOpen(!isOpen)} style={{ border: 'none' }}>
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
           </button>
-          <Link href="/" className="navbar-brand" style={{ color: '#e50914', fontWeight: '800', fontSize: '24px', display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '0.5px' }}>
+          <Link href="/" className="navbar-brand" style={{ color: '#e50914', fontWeight: '800', fontSize: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span className="material-icons notranslate" translate="no">movie</span> {siteName}
           </Link>
         </div>
