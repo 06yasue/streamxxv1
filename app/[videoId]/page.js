@@ -2,8 +2,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
-
-// META TAG SUDAH DIHAPUS DARI SINI, PINDAH KE LAYOUT.JS
+import DownloadAdsHandler from './DownloadAdsHandler'; // MANGGIL MESIN IKLAN DOWNLOAD
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
@@ -45,11 +44,12 @@ export default async function VideoPlayerPage({ params }) {
           <span><span className="material-icons" style={{fontSize:'16px'}}>event</span> {new Date(video.created_at).toLocaleDateString('id-ID')}</span>
         </div>
 
-        {video.source_type === 'upload' && (
-          <a href={`/download/${video.video_id}`} className={styles.downloadBtnFlatDesign}>
-            <span className="material-icons">download</span> DOWNLOAD VIDEO
-          </a>
-        )}
+        {/* TOMBOL DOWNLOAD DENGAN JEBAKAN IKLAN REWARDED */}
+        <DownloadAdsHandler 
+          videoId={video.video_id} 
+          sourceType={video.source_type} 
+          className={styles.downloadBtnFlatDesign} 
+        />
 
         <div className={styles.nativeAdsBelowDetails} dangerouslySetInnerHTML={{ __html: settings?.ads_body }} />
         <div style={{ textAlign: 'center', marginTop: '30px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_footer }} />
