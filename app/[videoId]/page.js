@@ -1,15 +1,58 @@
 import { supabase } from '../../lib/supabaseClient';
 import { notFound } from 'next/navigation';
 import styles from './video.module.css';
-
-// Komponen Tersembunyi buat Interaksi
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 
+// FUNGSI SEO KHUSUS HALAMAN VIDEO (Biar mantap pas di-share ke Sosmed)
 export async function generateMetadata({ params }) {
   const { videoId } = await params;
-  const { data: video } = await supabase.from('videos').select('*').eq('video_id', videoId).single();
+  
+  // Ambil data video & pengaturan situs sekaligus
+  const [vRes, sRes] = await Promise.all([
+    supabase.from('videos').select('*').eq('video_id', videoId).single(),
+    supabase.from('settings').select('*').eq('id', 1).single()
+  ]);
+
+  const video = vRes.data;
+  const settings = sRes.data;
+
   if (!video) return { title: 'Video Tidak Ditemukan' };
-  return { title: video.title, openGraph: { title: video.title, images: [video.thumbnail_url] } };
+
+  const siteName = settings?.site_name || 'WebVideoKu';
+  const fullTitle = `${video.title} - ${siteName}`; // Kombinasi Judul Video & Nama Situs
+  const description = `Tonton video ${video.title} secara gratis di ${siteName}.`;
+  
+  // Pastikan URL aman
+  let baseUrl = 'https://streamxxv1.vercel.app';
+  if (settings?.base_url) {
+    baseUrl = settings.base_url.startsWith('http') ? settings.base_url : `https://${settings.base_url}`;
+  }
+
+  return {
+    title: fullTitle,
+    description: description,
+    openGraph: {
+      title: fullTitle,
+      description: description,
+      url: `${baseUrl}/${videoId}`,
+      siteName: siteName,
+      images: [
+        {
+          url: video.thumbnail_url, // Gambar dari video
+          width: 1280,
+          height: 720,
+          alt: video.title,
+        }
+      ],
+      type: 'video.other',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: fullTitle,
+      description: description,
+      images: [video.thumbnail_url], // Gambar buat Twitter/X
+    },
+  };
 }
 
 export default async function VideoPlayerPage({ params }) {
@@ -28,7 +71,7 @@ export default async function VideoPlayerPage({ params }) {
   return (
     <div className={styles.videoPageBody}>
       
-      {/* 1. HEADER STICKY (Full Width & Centered) */}
+      {/* 1. HEADER STICKY (Otomatis ikut saat di-scroll) */}
       <div className={styles.headerFlat}>
           {settings?.site_logo_url ? (
               <img src={settings.site_logo_url} alt={settings?.site_name} className={styles.logoImageContainer} />
@@ -37,7 +80,7 @@ export default async function VideoPlayerPage({ params }) {
           )}
       </div>
 
-      {/* 2. KONTEN UTAMA */}
+      {/* 2. KONTEN UTAMA (Diatur oleh Media Queries: HP Full, Desktop Terpusat) */}
       <div className={styles.mainLayoutContainer}>
 
           {/* ADS TOP (FLOATING) */}
@@ -82,14 +125,14 @@ export default async function VideoPlayerPage({ params }) {
               </span>
             </div>
 
-            {/* TOMBOL DOWNLOAD (Hanya Upload) */}
+            {/* TOMBOL DOWNLOAD DENGAN EFEK GERAK & BORDER */}
             {video.source_type === 'upload' && (
               <a href={`/download/${video.video_id}`} className={styles.downloadBtnFlatDesign}>
                 <span className="material-icons notranslate">download</span> DOWNLOAD VIDEO
               </a>
             )}
 
-            {/* ADS BODY / NATIVE BANNER AREA (Dengan Garis Pemisah) */}
+            {/* ADS BODY / NATIVE BANNER AREA */}
             <div className={styles.nativeAdsBelowDetails}>
                <div dangerouslySetInnerHTML={{ __html: settings?.ads_body }} />
             </div>
