@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import { supabase } from '../lib/supabaseClient';
 import './globals.css';
 
