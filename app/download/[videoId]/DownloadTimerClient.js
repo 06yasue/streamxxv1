@@ -1,5 +1,12 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
+
+// TRIK ANTI KEDIP: Pisahkan komponen iklan agar tidak ikut me-refresh saat timer berjalan
+const AdsContainer = memo(({ htmlContent, className }) => {
+  if (!htmlContent) return null;
+  return <div className={className} dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+});
+AdsContainer.displayName = 'AdsContainer';
 
 export default function DownloadTimerClient({ video, settings }) {
   const [timeLeft, setTimeLeft] = useState(10);
@@ -15,17 +22,23 @@ export default function DownloadTimerClient({ video, settings }) {
     }
   }, [timeLeft]);
 
-  // LOGIKA POPUNDER + DOWNLOAD
+  // LOGIKA POPUNDER + AUTO DOWNLOAD
   const handleFinalDownload = (e) => {
     e.preventDefault();
 
-    // 1. POPUNDER: Buka link Offer CPA di Tab Baru
+    // 1. POPUNDER: Buka Iklan Offer di Tab Baru
     if (settings?.offer_link) {
       window.open(settings.offer_link, '_blank');
     }
 
-    // 2. DOWNLOAD AKTUAL: Alihkan tab saat ini ke link file MP4
-    window.location.href = video.video_url;
+    // 2. FORCED AUTO-DOWNLOAD: Maksa browser buat nyedot file, bukan muter video
+    const a = document.createElement('a');
+    a.href = video.video_url;
+    a.setAttribute('download', `${video.title}.mp4`); // Atribut krusial untuk auto-download
+    a.setAttribute('target', '_blank'); // Jaga-jaga buat browser iOS/Safari
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
@@ -42,12 +55,12 @@ export default function DownloadTimerClient({ video, settings }) {
 
       <div style={{ width: '100%', maxWidth: '600px', background: '#1a1a1a', border: '1px solid #333', padding: '30px', borderRadius: '4px', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
         
-        <h1 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '20px' }}>Generating Download Link...</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '20px' }}>Generating Secure Link...</h1>
         
-        {/* IKLAN ATAS (Desktop & Mobile) */}
+        {/* IKLAN ATAS (Nggak bakal kedip lagi) */}
         <div style={{ marginBottom: '20px' }}>
-          <div className="ads-mobile-only" dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
-          <div className="ads-desktop-only" dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
+          <AdsContainer htmlContent={settings?.ads_mobile} className="ads-mobile-only" />
+          <AdsContainer htmlContent={settings?.ads_desktop} className="ads-desktop-only" />
         </div>
 
         {/* THUMBNAIL VIDEO */}
@@ -83,8 +96,12 @@ export default function DownloadTimerClient({ video, settings }) {
         </div>
 
         {/* IKLAN BAWAH */}
-        <div style={{ marginTop: '30px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_body }} />
-        <div style={{ marginTop: '15px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_footer }} />
+        <div style={{ marginTop: '30px' }}>
+          <AdsContainer htmlContent={settings?.ads_body} />
+        </div>
+        <div style={{ marginTop: '15px' }}>
+          <AdsContainer htmlContent={settings?.ads_footer} />
+        </div>
 
       </div>
     </div>
