@@ -1,9 +1,52 @@
 import { supabase } from '../lib/supabaseClient';
 import './globals.css';
 
-export const metadata = {
-  title: 'WebVideoKu',
-  description: 'Platform penyimpanan video',
+// FUNGSI GENERATE METADATA NEXT.JS (SEO SUPER LENGKAP)
+export async function generateMetadata() {
+  const { data: settings } = await supabase.from('settings').select('*').eq('id', 1).single();
+
+  const siteName = settings?.site_name || 'WebVideoKu';
+  const siteTitle = settings?.site_title || 'Platform Video Terbaik';
+  const description = settings?.site_description || 'Website penyimpanan dan streaming video';
+  
+  // Validasi Base URL agar tidak error
+  let baseUrl = 'https://streamxxv1.vercel.app'; // Default fallback
+  if (settings?.base_url) {
+    baseUrl = settings.base_url.startsWith('http') ? settings.base_url : `https://${settings.base_url}`;
+  }
+
+  const logoUrl = settings?.site_logo_url || 'https://via.placeholder.com/150';
+  const ogImage = settings?.og_image_url || logoUrl;
+
+  return {
+    title: {
+      default: `${siteTitle} - ${siteName}`,
+      template: `%s | ${siteName}`,
+    },
+    description: description,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: '/',
+    },
+    icons: {
+      icon: logoUrl,
+      apple: logoUrl,
+    },
+    openGraph: {
+      title: `${siteTitle} - ${siteName}`,
+      description: description,
+      url: baseUrl,
+      siteName: siteName,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: siteName }],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${siteTitle} - ${siteName}`,
+      description: description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function RootLayout({ children }) {
@@ -12,14 +55,11 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* 1. CSS BOOTSTRAP */}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-        
-        {/* 2. GOOGLE FONTS (Jost) & MATERIAL ICONS (Wajib di sini biar gak keblokir) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         
         {settings?.head_script && (
           <div dangerouslySetInnerHTML={{ __html: settings.head_script }} />
