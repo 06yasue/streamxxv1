@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 * {
   font-family: "Jost", sans-serif !important;
@@ -7,7 +6,7 @@
 
 html, body {
   width: 100% !important;
-  max-width: 100% !important;
+  max-width: 100vw !important;
   overflow-x: hidden !important; 
   background-color: #121212 !important; 
   color: #ffffff !important;
@@ -15,19 +14,17 @@ html, body {
   padding: 0 !important;
 }
 
-.main-wrapper {
-  padding-top: 30px;
-  padding-bottom: 30px;
-}
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
+/* WADAH KONTEN: Di sini kita atur jarak biar gak nempel ke navbar */
 .container-custom {
   width: 100%;
+  padding-top: 25px !important; /* Jarak pas dari navbar ke form */
   padding-right: 15px;
   padding-left: 15px;
+  padding-bottom: 50px;
   margin-right: auto;
   margin-left: auto;
 }
@@ -36,11 +33,14 @@ html, body {
 @media (min-width: 992px) { .container-custom { max-width: 970px; } }
 @media (min-width: 1200px) { .container-custom { max-width: 1170px; } }
 
+/* NAVBAR: Nempel rata ke atas, gak ngegantung */
 .navbar {
   border: none !important;
-  border-radius: 6px !important;
-  margin-bottom: 30px !important;
+  border-radius: 0 !important; /* Hapus lengkungan */
+  margin: 0 !important; /* Hapus jarak luar */
+  padding: 5px 0 !important;
   background-color: #1a1a1a !important;
+  width: 100% !important;
 }
 
 .form-control, .btn {
@@ -55,16 +55,8 @@ html, body {
 @media (max-width: 991px) { .ads-mobile-only { display: block; } }
 
 .custom-notification {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #2b2b2b;
-  color: #fff;
-  padding: 15px 25px;
-  border-left: 4px solid #e50914;
-  border-radius: 4px;
-  z-index: 9999;
-  display: none;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+  position: fixed; bottom: 20px; right: 20px; background: #2b2b2b; color: #fff;
+  padding: 15px 25px; border-left: 4px solid #e50914; border-radius: 4px;
+  z-index: 9999; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.5);
 }
 .custom-notification.show { display: block; }
