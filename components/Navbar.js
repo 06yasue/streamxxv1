@@ -16,7 +16,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="navbar navbar-inverse" style={{ background: '#1a1a1a', boxShadow: '0 2px 10px rgba(0,0,0,0.5)', margin: 0, padding: 0, width: '100%' }}>
+    <nav className="navbar navbar-inverse" style={{ background: '#1a1a1a', boxShadow: '0 2px 10px rgba(0,0,0,0.5)', width: '100%' }}>
       <div className="container-custom">
         <div className="navbar-header">
           <button type="button" className="navbar-toggle" onClick={() => setIsOpen(!isOpen)} style={{ border: 'none' }}>
