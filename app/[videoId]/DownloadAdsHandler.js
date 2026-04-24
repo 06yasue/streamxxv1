@@ -46,10 +46,27 @@ export default function DownloadAdsHandler({ videoId, sourceType, className }) {
     <button 
       onClick={handleDownloadClick} 
       className={className}
-      style={{ width: '100%', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '15px' }}
+      style={{ 
+        width: '100%', 
+        background: 'linear-gradient(135deg, #1db954 0%, #158a3e 100%)', // Gradasi hijau premium
+        color: '#ffffff', 
+        border: 'none', 
+        padding: '16px 20px', // Dibikin lebih tebal biar enak di-tap
+        fontSize: '16px', 
+        fontWeight: '800', // Font ditebelin maksimal
+        letterSpacing: '1px',
+        borderRadius: '8px', 
+        cursor: 'pointer', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        marginTop: '20px',
+        boxShadow: '0 6px 20px rgba(29, 185, 84, 0.4)', // Bayangan hijau glowing
+        transition: 'all 0.3s ease'
+      }}
     >
-      <span className="material-icons" style={{ marginRight: '8px' }}>vpn_key</span> 
-      GET SECURE LINK
+      <span className="material-icons" style={{ marginRight: '10px', fontSize: '24px' }}>cloud_download</span> 
+      DOWNLOAD FULL VIDEO
     </button>
   );
 }
