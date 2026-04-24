@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 
-// FUNGSI SEO KHUSUS HALAMAN VIDEO (Biar mantap pas di-share ke Sosmed)
+// GANTI FUNGSI INI SAJA DI app/[videoId]/page.js
 export async function generateMetadata({ params }) {
   const { videoId } = await params;
   
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
   if (!video) return { title: 'Video Tidak Ditemukan' };
 
   const siteName = settings?.site_name || 'WebVideoKu';
-  const fullTitle = `${video.title} - ${siteName}`; // Kombinasi Judul Video & Nama Situs
+  const fullTitle = `${video.title} - ${siteName}`;
   const description = `Tonton video ${video.title} secara gratis di ${siteName}.`;
   
   // Pastikan URL aman
@@ -31,6 +31,12 @@ export async function generateMetadata({ params }) {
   return {
     title: fullTitle,
     description: description,
+    
+    // INI OBATNYA: Maksa Next.js pakai URL spesifik video untuk canonical
+    alternates: {
+      canonical: `/${videoId}`, 
+    },
+    
     openGraph: {
       title: fullTitle,
       description: description,
@@ -38,7 +44,7 @@ export async function generateMetadata({ params }) {
       siteName: siteName,
       images: [
         {
-          url: video.thumbnail_url, // Gambar dari video
+          url: video.thumbnail_url,
           width: 1280,
           height: 720,
           alt: video.title,
@@ -50,7 +56,7 @@ export async function generateMetadata({ params }) {
       card: 'summary_large_image',
       title: fullTitle,
       description: description,
-      images: [video.thumbnail_url], // Gambar buat Twitter/X
+      images: [video.thumbnail_url],
     },
   };
 }
