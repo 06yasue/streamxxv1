@@ -7,6 +7,7 @@ export default function Home() {
   const [uploadState, setUploadState] = useState('idle'); // 'idle' | 'loading' | 'done'
   const [progress, setProgress] = useState(0);
 
+  // 1. AMBIL PENGATURAN DARI DATABASE
   useEffect(() => {
     async function loadSettings() {
       const { data } = await supabase.from('settings').select('*').eq('id', 1).single();
@@ -15,38 +16,62 @@ export default function Home() {
     loadSettings();
   }, []);
 
+  // 2. TRIGGER IKLAN INTERSTITIAL MONETAG DI HALAMAN UTAMA
+  useEffect(() => {
+    // Kasih jeda 1.5 detik biar memastikan SDK Monetag di Layout udah ter-load 100%
+    const adTimer = setTimeout(() => {
+      // Wajib dicek apakah fungsi dari SDK-nya udah nempel di browser (window)
+      if (typeof window !== 'undefined' && typeof window.show_10921796 === 'function') {
+        try {
+          window.show_10921796({ 
+            type: 'inApp', 
+            inAppSettings: { 
+              frequency: 2, 
+              capping: 0.1, 
+              interval: 30, 
+              timeout: 5, 
+              everyPage: false 
+            } 
+          });
+          console.log("Interstitial Ad Triggered!");
+        } catch (error) {
+          console.error("Gagal meload iklan Interstitial:", error);
+        }
+      }
+    }, 1500);
+
+    // Bersihkan timer kalau user keburu pindah halaman
+    return () => clearTimeout(adTimer);
+  }, []);
+
   const siteName = settings?.site_name || 'WebVideoKu';
   const logoUrl = settings?.site_logo_url || null;
   const offerLink = settings?.offer_link || '#';
 
   // LOGIKA FAKE UPLOAD (Super Realistis)
   const handleFakeUpload = () => {
-    // 1. Pura-pura buka file manager biar user makin yakin
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'video/mp4,video/x-m4v,video/*';
     
     input.onchange = () => {
-      // 2. Pas file dipilih, mulai loading progresif palsu
       setUploadState('loading');
       setProgress(0);
       
       let currentProgress = 0;
       const interval = setInterval(() => {
-        // Nambah progres random biar kelihatan natural
         currentProgress += Math.floor(Math.random() * 15) + 5; 
         
         if (currentProgress >= 100) {
           setProgress(100);
           clearInterval(interval);
-          // 3. Jeda sedikit setelah 100% lalu ubah ke tombol Create Account
           setTimeout(() => {
             setUploadState('done');
           }, 800);
         } else {
           setProgress(currentProgress);
         }
-      }, 500); // Kecepatan loading
+      }, 500); 
     };
     
     input.click();
