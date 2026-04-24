@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabaseClient';
-import './globals.css'; // Manggil file CSS yang baru kita buat
+import './globals.css';
 
 export const metadata = {
   title: 'WebVideoKu',
@@ -11,15 +11,16 @@ export default async function RootLayout({ children }) {
   const { data: settings } = await supabase.from('settings').select('head_script').eq('id', 1).single();
 
   return (
-    <html lang="en">
+    <html lang="id">
       <head>
         {/* Bootstrap 3 & Material Icons */}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         
-        {/* Google Fonts: Jost */}
+        {/* Google Fonts: Jost (Sesuai kode dari lo) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
         
         {/* INJEKSI SCRIPT HEAD (Google Analytics dll) */}
         {settings?.head_script && (
@@ -27,7 +28,11 @@ export default async function RootLayout({ children }) {
         )}
       </head>
       <body>
-        {children}
+        {/* Bungkus ini biar halaman gak nempel ke pucuk layar */}
+        <div className="main-wrapper">
+          {children}
+        </div>
+        
         {/* Wadah notifikasi global */}
         <div id="notification-bar" className="custom-notification"></div>
       </body>
