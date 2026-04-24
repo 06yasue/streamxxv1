@@ -8,6 +8,7 @@ export default function RootLayout({ children }) {
     <html lang="id">
       <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         <style dangerouslySetInnerHTML={{__html: `
           body { background-color: #121212; color: #ffffff; margin: 0; padding: 0; font-family: Arial, sans-serif; }
           .container-custom { width: 100%; padding: 0 10px; }
