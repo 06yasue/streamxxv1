@@ -89,7 +89,7 @@ export default async function RootLayout({ children }) {
   const { data } = await supabase.from('settings').select('head_script').eq('id', 1).single();
 
   return (
-    <html lang="id">
+    <html lang="en">
       <head>
         {/* Resource Global CSS & Material Icons */}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
