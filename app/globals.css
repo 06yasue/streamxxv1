@@ -1,10 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
-
-* {
-  font-family: "Jost", sans-serif !important;
-}
-
+/* 1. TERAPKAN JOST HANYA DI BODY (JANGAN PAKAI BINTANG *) */
 html, body {
+  font-family: "Jost", sans-serif !important;
   width: 100% !important;
   max-width: 100vw !important;
   overflow-x: hidden !important; 
@@ -14,17 +10,22 @@ html, body {
   padding: 0 !important;
 }
 
+/* 2. PERLINDUNGAN MUTLAK BUAT IKON (Biar gak berubah jadi teks) */
+.material-icons {
+  font-family: 'Material Icons' !important;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* WADAH KONTEN: Di sini kita atur jarak biar gak nempel ke navbar */
+/* 3. WADAH KONTEN (Jarak atasnya gw tambah biar gak nyundul navbar) */
 .container-custom {
   width: 100%;
-  padding-top: 25px !important; /* Jarak pas dari navbar ke form */
+  padding-top: 30px !important; 
+  padding-bottom: 50px;
   padding-right: 15px;
   padding-left: 15px;
-  padding-bottom: 50px;
   margin-right: auto;
   margin-left: auto;
 }
@@ -33,11 +34,11 @@ html, body {
 @media (min-width: 992px) { .container-custom { max-width: 970px; } }
 @media (min-width: 1200px) { .container-custom { max-width: 1170px; } }
 
-/* NAVBAR: Nempel rata ke atas, gak ngegantung */
+/* 4. NAVBAR (Udah rata, gak gantung, gak ada border norak) */
 .navbar {
   border: none !important;
-  border-radius: 0 !important; /* Hapus lengkungan */
-  margin: 0 !important; /* Hapus jarak luar */
+  border-radius: 0 !important; 
+  margin: 0 !important; 
   padding: 5px 0 !important;
   background-color: #1a1a1a !important;
   width: 100% !important;
