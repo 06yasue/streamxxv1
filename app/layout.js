@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabaseClient';
 import './globals.css';
 
-// FUNGSI GENERATE METADATA NEXT.JS (SEO SUPER LENGKAP)
+// GANTI FUNGSI INI DI app/layout.js
 export async function generateMetadata() {
   const { data: settings } = await supabase.from('settings').select('*').eq('id', 1).single();
 
@@ -9,8 +9,7 @@ export async function generateMetadata() {
   const siteTitle = settings?.site_title || 'Platform Video Terbaik';
   const description = settings?.site_description || 'Website penyimpanan dan streaming video';
   
-  // Validasi Base URL agar tidak error
-  let baseUrl = 'https://streamxxv1.vercel.app'; // Default fallback
+  let baseUrl = 'https://streamxxv1.vercel.app';
   if (settings?.base_url) {
     baseUrl = settings.base_url.startsWith('http') ? settings.base_url : `https://${settings.base_url}`;
   }
@@ -20,34 +19,32 @@ export async function generateMetadata() {
 
   return {
     title: {
-      default: `${siteTitle} - ${siteName}`,
-      template: `%s | ${siteName}`,
+      default: siteTitle, // Muncul di halaman utama
+      template: `%s | ${siteName}`, // Otomatis nambahin nama situs di halaman anak
     },
     description: description,
-    metadataBase: new URL(baseUrl),
-    alternates: {
-      canonical: '/',
-    },
+    metadataBase: new URL(baseUrl), // Kunci utama biar URL gak nyasar
     icons: {
       icon: logoUrl,
       apple: logoUrl,
     },
     openGraph: {
-      title: `${siteTitle} - ${siteName}`,
+      title: siteTitle,
       description: description,
-      url: baseUrl,
+      url: '/', // Untuk halaman utama
       siteName: siteName,
       images: [{ url: ogImage, width: 1200, height: 630, alt: siteName }],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${siteTitle} - ${siteName}`,
+      title: siteTitle,
       description: description,
       images: [ogImage],
     },
   };
 }
+
 
 export default async function RootLayout({ children }) {
   const { data: settings } = await supabase.from('settings').select('head_script').eq('id', 1).single();
