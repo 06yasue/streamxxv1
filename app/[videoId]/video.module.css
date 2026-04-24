@@ -1,61 +1,98 @@
-.videoWrapper {
-    width: 100% !important;
+.videoPageBody {
+    background-color: #121212;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+/* Wadah Kaku untuk Desktop, Full Width untuk HP */
+.mainLayoutContainer {
+    width: 100%;
+    padding: 0;
+    margin: 0 auto;
+}
+
+/* Khusus Desktop/Tablet Gede: Container Kaku */
+@media (min-width: 992px) {
+    .mainLayoutContainer {
+        max-width: 900px; /* Lebar contained biar rapi di PC */
+        padding: 15px 0;
+    }
+}
+
+/* HEADER FLAT (Ganti Navbar) */
+.flatHeader {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #1a1a1a;
+    border: none;
+    border-radius: 0;
+}
+
+.logoImageContainer {
+    max-height: 30px;
+    width: auto;
+}
+
+.fallbackSiteText {
+    font-weight: 800;
+    font-size: 18px;
+    color: #e50914;
+}
+
+/* ADS FLOATING AREA */
+.adsFloatingWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Jarak iklan di mobile */
+@media (max-width: 991px) {
+    .adsFloatingWrapper {
+        padding: 10px 0;
+    }
+}
+
+/* VIDEO PLAYER WRAPPER */
+.playerAreaWrapper {
+    width: 100%;
     background: #000;
     margin: 0;
     padding: 0;
     position: relative;
     overflow: hidden;
+    /* Full width side-to-side di mobile karena mainContainer padding 0 */
 }
 
-.playerContainer {
+.playerAspectRatioBox {
     width: 100%;
     aspect-ratio: 16/9;
     position: relative;
 }
 
-/* Overlay transparan buat jebakan Link Offer */
-.clickOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    cursor: pointer;
-    background: rgba(0,0,0,0);
-}
-
-.headerVideo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
-    background: #1a1a1a;
-}
-
-.floatingAds {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-    text-align: center;
-}
-
-.videoInfo {
+/* INFO KONTEN */
+.infoSection {
     padding: 20px 15px;
+    /* layout contained desktop bakal ngasih margin horizontal otomatis */
 }
 
-.titleTruncate {
+/* Title Truncate Ellipsis */
+.titleLineEllipsis {
     display: block;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; /* ... for long titles */
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 10px;
 }
 
-.metaData {
+.metaLineData {
     display: flex;
     justify-content: space-between;
     color: #888;
@@ -63,8 +100,9 @@
     margin-bottom: 20px;
 }
 
-.btnDownload {
-    background: #e50914;
+/* Tombol Download Flat */
+.downloadBtnFlatDesign {
+    background-color: #e50914;
     color: #fff;
     border: none;
     padding: 15px;
@@ -76,11 +114,13 @@
     gap: 10px;
     text-decoration: none;
     border-radius: 0 !important; /* Flat design */
+    margin-bottom: 25px;
+    box-shadow: none !important;
 }
 
-/* Support ukuran native banner */
-.nativeAdsArea {
+/* Slot Iklan Native di Bawah Detail */
+.nativeAdsBelowDetails {
     width: 100%;
-    margin-top: 25px;
     min-height: 100px;
+    margin-top: 25px;
 }
