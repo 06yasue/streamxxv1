@@ -1,12 +1,10 @@
-/* 1. IMPORT GOOGLE FONT */
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-/* 2. PAKSA FONT JOST KE SEMUA ELEMEN (BUNUH FONT BOOTSTRAP) */
 * {
   font-family: "Jost", sans-serif !important;
 }
 
-/* 3. KUNCI LAYAR ANTI GESER & PAKSA BACKGROUND HITAM FULL */
 html, body {
   width: 100% !important;
   max-width: 100% !important;
@@ -17,9 +15,8 @@ html, body {
   padding: 0 !important;
 }
 
-/* 4. JARAK RUANG NAPAS BIAR GAK NEMPEL KE ATAS */
 .main-wrapper {
-  padding-top: 15px;
+  padding-top: 30px;
   padding-bottom: 30px;
 }
 
@@ -27,7 +24,6 @@ html, body {
   box-sizing: border-box;
 }
 
-/* 5. WADAH KONTEN BIAR PRESISI DI SEMUA LAYAR */
 .container-custom {
   width: 100%;
   padding-right: 15px;
@@ -40,11 +36,10 @@ html, body {
 @media (min-width: 992px) { .container-custom { max-width: 970px; } }
 @media (min-width: 1200px) { .container-custom { max-width: 1170px; } }
 
-/* 6. BERSIHKAN BORDER NAVBAR & PERMANIS SUDUTNYA */
 .navbar {
   border: none !important;
   border-radius: 6px !important;
-  margin-bottom: 25px;
+  margin-bottom: 30px !important;
   background-color: #1a1a1a !important;
 }
 
@@ -55,12 +50,10 @@ html, body {
   border-radius: 4px;
 }
 
-/* 7. KHUSUS IKLAN */
 .ads-desktop-only { display: none; }
 @media (min-width: 992px) { .ads-desktop-only { display: block; } .ads-mobile-only { display: none; } }
 @media (max-width: 991px) { .ads-mobile-only { display: block; } }
 
-/* 8. NOTIFIKASI */
 .custom-notification {
   position: fixed;
   bottom: 20px;
