@@ -1,33 +1,31 @@
 import { supabase } from '../../../lib/supabaseClient';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import DownloadTimerClient from './DownloadTimerClient';
-
-export const metadata = {
-  title: 'Secure Download',
-  robots: { index: false, follow: false },
-};
 
 export default async function SecureDownloadPage({ params, searchParams }) {
   const { videoId } = await params;
   const sp = await searchParams;
   const token = sp?.token;
+  const headerList = await headers();
+  const currentUA = headerList.get('user-agent'); // Ambil User Agent browser pengakses
 
-  // 1. Cek keberadaan token
   if (!token) redirect('/');
 
-  // 2. VALIDASI TOKEN TINGKAT TINGGI
   try {
-    // Decode Base64
-    const decoded = Buffer.from(token, 'base64').toString('utf-8');
-    const [tokenVideoId, tokenTime] = decoded.split('_');
+    // Decode Token
+    const decoded = decodeURIComponent(escape(atob(token)));
+    const [tokenVideoId, tokenTime, tokenUA] = decoded.split('|');
     const timeDiff = Date.now() - parseInt(tokenTime);
 
-    // Syarat Batal: Video ID beda, ATAU token usianya udah lebih dari 1 jam (3600000 ms), ATAU format rusak
-    if (tokenVideoId !== videoId || timeDiff > 3600000 || timeDiff < 0) {
+    // VALIDASI MATI-MATIAN:
+    // 1. Video ID harus cocok
+    // 2. User Agent harus sama persis (Anti pindah browser)
+    // 3. Waktu tidak boleh lebih dari 30 menit
+    if (tokenVideoId !== videoId || tokenUA !== currentUA || timeDiff > 1800000 || timeDiff < 0) {
       redirect('/');
     }
   } catch (err) {
-    // Kalau user masukin string ngasal yang gak bisa di-decode
     redirect('/');
   }
 
