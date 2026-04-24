@@ -10,6 +10,7 @@ export default function Navbar() {
           </Link>
         </div>
         <ul className="nav navbar-nav navbar-right" style={{ paddingRight: '15px' }}>
+          <li><Link href="/list" style={{ color: '#ccc' }}>List Video</Link></li>
           <li><Link href="/upload" style={{ color: '#ccc' }}>Upload</Link></li>
           <li><Link href="/settings" style={{ color: '#ccc' }}>Setting</Link></li>
         </ul>
