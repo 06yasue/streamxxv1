@@ -12,7 +12,6 @@ export async function generateMetadata() {
       template: `%s | ${siteName}`,
     },
     description: settings?.site_description || 'Website video hosting',
-    // CANONICAL DIHAPUS TOTAL
     icons: {
       icon: settings?.site_logo_url || '/favicon.ico',
     },
@@ -26,17 +25,15 @@ export async function generateMetadata() {
   };
 }
 
-export default async function RootLayout({ children }) {
-  const { data } = await supabase.from('settings').select('head_script').eq('id', 1).single();
-
+export default function RootLayout({ children }) {
+  // Script Head dihapus total dari sini sesuai permintaan lo
   return (
-    <html lang="en">
+    <html lang="id">
       <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
       </head>
       <body>
-        {data?.head_script && <div dangerouslySetInnerHTML={{ __html: data.head_script }} />}
         {children}
         <div id="notification-bar" className="custom-notification"></div>
       </body>
