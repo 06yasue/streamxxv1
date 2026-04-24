@@ -3,35 +3,7 @@ import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 
-export async function generateMetadata({ params }) {
-  const { videoId } = await params;
-  const [vRes, sRes] = await Promise.all([
-    supabase.from('videos').select('*').eq('video_id', videoId).single(),
-    supabase.from('settings').select('*').eq('id', 1).single()
-  ]);
-
-  const video = vRes.data;
-  const settings = sRes.data;
-  if (!video) return { title: 'Video Tidak Ditemukan' };
-
-  const siteName = settings?.site_name || 'WebVideoKu';
-
-  return {
-    title: video.title,
-    description: `Tonton ${video.title} di ${siteName}`,
-    openGraph: {
-      title: `${video.title} - ${siteName}`,
-      description: `Tonton video ini di ${siteName}`,
-      images: [{ url: video.thumbnail_url, width: 1200, height: 630 }],
-      type: 'video.other',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: video.title,
-      images: [video.thumbnail_url],
-    },
-  };
-}
+// META TAG SUDAH DIHAPUS DARI SINI, PINDAH KE LAYOUT.JS
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
@@ -42,15 +14,18 @@ export default async function VideoPlayerPage({ params }) {
 
   const video = vRes.data;
   const settings = sRes.data;
+  
   if (!video) return notFound();
 
   return (
     <>
+      {/* Iklan Atas */}
       <div className={styles.adsFloatingWrapper}>
         <div className="ads-mobile-only" dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
         <div className="ads-desktop-only" dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
       </div>
 
+      {/* Area Video */}
       <div className={styles.playerAreaWrapper}>
         <ClientInteractionHandler video={video} settings={settings} />
         <div className={styles.playerAspectRatioBox}>
@@ -62,11 +37,12 @@ export default async function VideoPlayerPage({ params }) {
         </div>
       </div>
 
+      {/* Info & Detail Bawah */}
       <div className={styles.infoSection}>
         <div className={styles.titleLineEllipsis}>{video.title}</div>
         <div className={styles.metaLineData}>
           <span><span className="material-icons" style={{fontSize:'16px'}}>visibility</span> {video.hit_count} views</span>
-          <span><span className="material-icons" style={{fontSize:'16px'}}>event</span> {new Date(video.created_at).toLocaleDateString()}</span>
+          <span><span className="material-icons" style={{fontSize:'16px'}}>event</span> {new Date(video.created_at).toLocaleDateString('id-ID')}</span>
         </div>
 
         {video.source_type === 'upload' && (
