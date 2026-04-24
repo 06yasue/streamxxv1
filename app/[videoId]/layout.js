@@ -1,7 +1,7 @@
 import styles from './video.module.css';
 import { supabase } from '../../lib/supabaseClient';
 
-// 1. META TAG RESMI PINDAH KE LAYOUT SINI!
+// FUNGSI GENERATE METADATA DINAMIS (SEO KHUSUS VIDEO)
 export async function generateMetadata({ params }) {
   const { videoId } = await params;
   
@@ -13,16 +13,19 @@ export async function generateMetadata({ params }) {
   const video = vRes.data;
   const settings = sRes.data;
   
-  if (!video) return { title: 'Video Tidak Ditemukan' };
+  if (!video) return { title: 'Video Not Found' };
 
-  const siteName = settings?.site_name || 'WebVideoKu';
+  const siteName = settings?.site_name || 'WebVideo';
+  
+  // Deskripsi dalam Bahasa Inggris, kombinasi dengan site name, TANPA kata "video hosting"
+  const description = `Watch ${video.title} on ${siteName}. Enjoy the best streaming experience with high-quality videos and latest viral content.`;
 
   return {
     title: video.title,
-    description: `Tonton ${video.title} di ${siteName}`,
+    description: description,
     openGraph: {
-      title: video.title,
-      description: `Tonton video ini di ${siteName}`,
+      title: `${video.title} - ${siteName}`,
+      description: description,
       url: `/${videoId}`,
       siteName: siteName,
       images: [
@@ -38,13 +41,13 @@ export async function generateMetadata({ params }) {
     twitter: {
       card: 'summary_large_image',
       title: video.title,
+      description: description,
       images: [video.thumbnail_url],
     },
   };
 }
 
-// 2. TAMPILAN HEADER LAYOUT
-export default async function VideoLayout({ children, params }) {
+export default async function VideoLayout({ children }) {
   const { data: settings } = await supabase.from('settings').select('site_name, site_logo_url').eq('id', 1).single();
 
   return (
@@ -58,7 +61,7 @@ export default async function VideoLayout({ children, params }) {
           )}
       </div>
       
-      {/* Bungkus Konten Page */}
+      {/* Container Konten Video */}
       <div className={styles.mainLayoutContainer}>
         {children}
       </div>
