@@ -1,26 +1,36 @@
 import { supabase } from '../../../lib/supabaseClient';
 import { redirect } from 'next/navigation';
-import DownloadTimerClient from './DownloadTimerClient'; // Komponen UI & Timer
+import DownloadTimerClient from './DownloadTimerClient';
 
-export async function generateMetadata({ params }) {
-  const { videoId } = await params;
-  const { data: video } = await supabase.from('videos').select('title').eq('video_id', videoId).single();
-  return {
-    title: `Download ${video?.title || 'Video'}`,
-    robots: { index: false, follow: false }, // Jangan index halaman download ini ke Google
-  };
-}
+export const metadata = {
+  title: 'Secure Download',
+  robots: { index: false, follow: false },
+};
 
 export default async function SecureDownloadPage({ params, searchParams }) {
   const { videoId } = await params;
-  const { token } = await searchParams;
+  const sp = await searchParams;
+  const token = sp?.token;
 
-  // KEAMANAN 1: Kalau gak ada token atau token kependekan, tendang ke Home!
-  if (!token || token.length < 15) {
+  // 1. Cek keberadaan token
+  if (!token) redirect('/');
+
+  // 2. VALIDASI TOKEN TINGKAT TINGGI
+  try {
+    // Decode Base64
+    const decoded = Buffer.from(token, 'base64').toString('utf-8');
+    const [tokenVideoId, tokenTime] = decoded.split('_');
+    const timeDiff = Date.now() - parseInt(tokenTime);
+
+    // Syarat Batal: Video ID beda, ATAU token usianya udah lebih dari 1 jam (3600000 ms), ATAU format rusak
+    if (tokenVideoId !== videoId || timeDiff > 3600000 || timeDiff < 0) {
+      redirect('/');
+    }
+  } catch (err) {
+    // Kalau user masukin string ngasal yang gak bisa di-decode
     redirect('/');
   }
 
-  // KEAMANAN 2: Ambil data video
   const [vRes, sRes] = await Promise.all([
     supabase.from('videos').select('*').eq('video_id', videoId).single(),
     supabase.from('settings').select('*').eq('id', 1).single()
@@ -29,11 +39,7 @@ export default async function SecureDownloadPage({ params, searchParams }) {
   const video = vRes.data;
   const settings = sRes.data;
 
-  // KEAMANAN 3: Kalau video gak ada atau bukan tipe upload, tendang ke Home!
-  if (!video || video.source_type !== 'upload') {
-    redirect('/');
-  }
+  if (!video || video.source_type !== 'upload') redirect('/');
 
-  // Lolos keamanan? Tampilkan halaman timer
   return <DownloadTimerClient video={video} settings={settings} />;
 }
