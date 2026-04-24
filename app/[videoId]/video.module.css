@@ -5,57 +5,55 @@
     margin: 0;
 }
 
-/* Wadah Kaku untuk Desktop, Full Width untuk HP */
+/* HEADER STICKY & CENTERED */
+.headerFlat {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Logo di tengah */
+    padding: 12px 15px;
+    background-color: #161a1d; /* Warna background khusus header (Dark Slate) */
+    border-bottom: 1px solid #2b2b2b;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+.logoImageContainer {
+    max-height: 45px; /* Logo diperbesar dari 30px ke 45px */
+    width: auto;
+    object-fit: contain;
+}
+
+.fallbackSiteText {
+    font-weight: 800;
+    font-size: 22px;
+    color: #0288d1; /* Warna teks biru serasi dengan tombol download */
+    letter-spacing: 0.5px;
+}
+
+/* CONTAINER KONTEN (Di bawah Header) */
 .mainLayoutContainer {
     width: 100%;
     padding: 0;
     margin: 0 auto;
 }
 
-/* Khusus Desktop/Tablet Gede: Container Kaku */
 @media (min-width: 992px) {
     .mainLayoutContainer {
-        max-width: 900px; /* Lebar contained biar rapi di PC */
-        padding: 15px 0;
+        max-width: 900px;
+        padding-bottom: 30px;
     }
 }
 
-/* HEADER FLAT (Ganti Navbar) */
-.flatHeader {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background: #1a1a1a;
-    border: none;
-    border-radius: 0;
-}
-
-.logoImageContainer {
-    max-height: 30px;
-    width: auto;
-}
-
-.fallbackSiteText {
-    font-weight: 800;
-    font-size: 18px;
-    color: #e50914;
-}
-
-/* ADS FLOATING AREA */
+/* ADS FLOATING AREA (Atas Video) */
 .adsFloatingWrapper {
     width: 100%;
     display: flex;
     justify-content: center;
     text-align: center;
-    margin: 0;
-    padding: 0;
-}
-
-/* Jarak iklan di mobile */
-@media (max-width: 991px) {
-    .adsFloatingWrapper {
-        padding: 10px 0;
-    }
+    padding: 15px 0;
+    background: #121212;
 }
 
 /* VIDEO PLAYER WRAPPER */
@@ -66,7 +64,6 @@
     padding: 0;
     position: relative;
     overflow: hidden;
-    /* Full width side-to-side di mobile karena mainContainer padding 0 */
 }
 
 .playerAspectRatioBox {
@@ -78,15 +75,13 @@
 /* INFO KONTEN */
 .infoSection {
     padding: 20px 15px;
-    /* layout contained desktop bakal ngasih margin horizontal otomatis */
 }
 
-/* Title Truncate Ellipsis */
 .titleLineEllipsis {
     display: block;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* ... for long titles */
+    text-overflow: ellipsis;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 10px;
@@ -97,12 +92,12 @@
     justify-content: space-between;
     color: #888;
     font-size: 13px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-/* Tombol Download Flat */
+/* TOMBOL DOWNLOAD (Serasi dengan tema, tidak merah) */
 .downloadBtnFlatDesign {
-    background-color: #e50914;
+    background-color: #0288d1; /* Warna Biru Premium CTA */
     color: #fff;
     border: none;
     padding: 15px;
@@ -113,14 +108,22 @@
     justify-content: center;
     gap: 10px;
     text-decoration: none;
-    border-radius: 0 !important; /* Flat design */
-    margin-bottom: 25px;
-    box-shadow: none !important;
+    border-radius: 0 !important; /* Tetap flat anti border-radius */
+    margin-bottom: 30px;
+    transition: background-color 0.3s;
 }
 
-/* Slot Iklan Native di Bawah Detail */
+.downloadBtnFlatDesign:hover {
+    background-color: #026aa3; /* Sedikit gelap saat ditekan/hover */
+    color: #fff;
+    text-decoration: none;
+}
+
+/* SLOT IKLAN BAWAH (Dengan Garis Pemisah) */
 .nativeAdsBelowDetails {
     width: 100%;
     min-height: 100px;
-    margin-top: 25px;
+    margin-top: 10px;
+    padding-top: 25px;
+    border-top: 1px dashed #333; /* GARIS PEMISAH ELEGAN */
 }
