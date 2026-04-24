@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 
 export default function DownloadAdsHandler({ videoId, sourceType, className }) {
   
-  // In-App Interstitial Otomatis
   useEffect(() => {
     const adTimer = setTimeout(() => {
       if (typeof window !== 'undefined' && typeof window.show_10921796 === 'function') {
@@ -18,27 +17,26 @@ export default function DownloadAdsHandler({ videoId, sourceType, className }) {
   const handleDownloadClick = (e) => {
     e.preventDefault();
     
-    // GENERATE TOKEN SUPER AMAN (VideoID + Waktu Saat Ini di-enkripsi Base64)
+    // FINGERPRINT: Ambil identitas browser (User Agent)
+    const userAgent = navigator.userAgent;
     const timestamp = Date.now();
-    const rawToken = `${videoId}_${timestamp}`;
-    const secureToken = btoa(rawToken); // Enkripsi jadi huruf acak
+    
+    // Gabungkan VideoID + Timestamp + UserAgent untuk keamanan ganda
+    const rawToken = `${videoId}|${timestamp}|${userAgent}`;
+    const secureToken = btoa(unescape(encodeURIComponent(rawToken))); // Encode aman
     
     const downloadUrl = `/download/${videoId}?token=${secureToken}`;
 
-    // TRIK ANTI POP-UP BLOCKER: Buka tab kosong duluan sebelum iklan jalan!
-    const newTab = window.open('about:blank', '_blank');
-
     if (typeof window !== 'undefined' && typeof window.show_10921796 === 'function') {
-      // Jalanin Iklan Rewarded Monetag
       window.show_10921796()
         .then(() => {
-          newTab.location.href = downloadUrl; // Kalau beres nonton, arahin tab kosong tadi ke link download
+          window.location.href = downloadUrl; 
         })
         .catch(() => {
-          newTab.location.href = downloadUrl; // Kalau iklan error, tetep kasih jalan
+          window.location.href = downloadUrl;
         });
     } else {
-      newTab.location.href = downloadUrl;
+      window.location.href = downloadUrl;
     }
   };
 
@@ -50,8 +48,8 @@ export default function DownloadAdsHandler({ videoId, sourceType, className }) {
       className={className}
       style={{ width: '100%', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '15px' }}
     >
-      <span className="material-icons" style={{ marginRight: '8px' }}>download</span> 
-      DOWNLOAD VIDEO
+      <span className="material-icons" style={{ marginRight: '8px' }}>vpn_key</span> 
+      GET SECURE LINK
     </button>
   );
 }
