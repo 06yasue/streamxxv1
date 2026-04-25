@@ -1,5 +1,7 @@
 import styles from './video.module.css';
 import { supabase } from '../../lib/supabaseClient';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // FUNGSI GENERATE METADATA DINAMIS (SEO KHUSUS VIDEO)
 export async function generateMetadata({ params }) {
