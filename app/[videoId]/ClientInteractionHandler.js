@@ -35,16 +35,31 @@ export default function ClientInteractionHandler({ video, settings }) {
     return () => document.removeEventListener('contextmenu', handleContextMenu);
   }, [video]);
 
-  // Fungsi buka link offer
+  // Fungsi pemicu Rewarded Popup Monetag
   const handlePlayerOverlayClick = () => {
-    if (!hasClickedOffer && settings?.offer_link) {
+    if (!hasClickedOffer) {
       
-      // KUNCI UTAMA: Simpan catatan ke browser FB SEBELUM halamannya pindah!
-      sessionStorage.setItem(`offer_clicked_${video.video_id}`, 'true');
-      setHasClickedOffer(true); // Overlay langsung hilang
-      
-      // Eksekusi buka iklan
-      window.open(settings.offer_link, '_blank');
+      // Pastikan script Monetag udah siap di browser
+      if (typeof window !== 'undefined' && typeof window.show_10921796 === 'function') {
+        
+        // Panggil Rewarded Popup sesuai kode dari lo
+        window.show_10921796('pop')
+          .then(() => { 
+            // JIKA IKLAN BERES / DITUTUP: Berikan "Reward" (Buka video)
+            sessionStorage.setItem(`offer_clicked_${video.video_id}`, 'true');
+            setHasClickedOffer(true); 
+          })
+          .catch((e) => { 
+            // JIKA IKLAN ERROR: Tetap berikan reward agar user tidak stuck
+            sessionStorage.setItem(`offer_clicked_${video.video_id}`, 'true');
+            setHasClickedOffer(true); 
+          });
+
+      } else {
+        // JIKA SCRIPT MONETAG DIBLOKIR TOTAL: Buka video secara normal
+        sessionStorage.setItem(`offer_clicked_${video.video_id}`, 'true');
+        setHasClickedOffer(true);
+      }
     }
   };
 
@@ -63,4 +78,3 @@ export default function ClientInteractionHandler({ video, settings }) {
     </>
   );
 }
-
