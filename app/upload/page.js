@@ -149,7 +149,21 @@ export default function UploadPage() {
               {mode === 'upload' ? (
                 <div className="form-group">
                   <label style={{ color: '#888' }}>Pilih File Video (MP4)</label>
-                  <input type="file" accept="video/*" className="form-control" style={{ background: '#2b2b2b', color: '#fff', border: 'none', height: 'auto', padding: '10px' }} onChange={e => setVideoFile(e.target.files[0])} />
+                  <input 
+                    type="file" 
+                    accept="video/*" 
+                    className="form-control" 
+                    style={{ background: '#2b2b2b', color: '#fff', border: 'none', height: 'auto', padding: '10px' }} 
+                    onChange={e => {
+                      const file = e.target.files[0];
+                      setVideoFile(file);
+                      if (file) {
+                        // Fitur Auto-Title: Ngambil nama file dan buang ekstensinya (.mp4, .mkv, dll)
+                        const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+                        setTitle(fileNameWithoutExt);
+                      }
+                    }} 
+                  />
                 </div>
               ) : (
                 <div className="form-group">
