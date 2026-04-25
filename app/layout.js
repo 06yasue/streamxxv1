@@ -9,6 +9,9 @@ export const viewport = {
   maximumScale: 1,
 };
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // 2. MESIN METADATA GLOBAL (SUPER LENGKAP & SEO)
 export async function generateMetadata() {
   const { data: settings } = await supabase.from('settings').select('*').eq('id', 1).single();
