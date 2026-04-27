@@ -31,10 +31,11 @@ export default function AdHeadVideo() {
     }
   }, []);
 
-  return (
-    <div style={{ width: '100%', textAlign: 'center', marginBottom: '15px' }}>
-      {/* Tiga script Monetag lu bakal disuntik dengan aman ke dalam div ini */}
+    return (
+    // Margin bottom 15px dihapus biar gak ninggalin ruang kosong
+    <div style={{ width: '100%', textAlign: 'center' }}> 
       <div ref={adContainerRef}></div>
     </div>
   );
 }
+
