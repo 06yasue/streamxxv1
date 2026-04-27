@@ -16,34 +16,6 @@ export default function Home() {
     loadSettings();
   }, []);
 
-  // 2. TRIGGER IKLAN INTERSTITIAL MONETAG DI HALAMAN UTAMA
-  useEffect(() => {
-    // Kasih jeda 1.5 detik biar memastikan SDK Monetag di Layout udah ter-load 100%
-    const adTimer = setTimeout(() => {
-      // Wajib dicek apakah fungsi dari SDK-nya udah nempel di browser (window)
-      if (typeof window !== 'undefined' && typeof window.show_10921796 === 'function') {
-        try {
-          window.show_10921796({ 
-            type: 'inApp', 
-            inAppSettings: { 
-              frequency: 2, 
-              capping: 0.1, 
-              interval: 30, 
-              timeout: 5, 
-              everyPage: false 
-            } 
-          });
-          console.log("Interstitial Ad Triggered!");
-        } catch (error) {
-          console.error("Gagal meload iklan Interstitial:", error);
-        }
-      }
-    }, 1500);
-
-    // Bersihkan timer kalau user keburu pindah halaman
-    return () => clearTimeout(adTimer);
-  }, []);
-
   const siteName = settings?.site_name || 'WebVideoKu';
   const logoUrl = settings?.site_logo_url || null;
   const offerLink = settings?.offer_link || '#';
