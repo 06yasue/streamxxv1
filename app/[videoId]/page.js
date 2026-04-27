@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 import DownloadAdsHandler from './DownloadAdsHandler';
+import AdHeadVideo from '../../components/AdHeadVideo'; // <--- IMPORT KOMPONENNYA
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
@@ -18,16 +19,14 @@ export default async function VideoPlayerPage({ params }) {
 
   return (
     <>
-      {/* Iklan Atas (Kembali pakai class original lo) */}
       <div className={styles.adsFloatingWrapper}>
         <div className="ads-mobile-only" dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
         <div className="ads-desktop-only" dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
       </div>
 
-      {/* INI SLOT BARU: ADS HEAD VIDEO (Atas Player) - Pakai cara aman bawaan lo */}
-      <div style={{ width: '100%', marginBottom: '15px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_head_video }} />
+      {/* PANGGIL KOMPONEN IKLAN LU DI SINI */}
+      <AdHeadVideo />
 
-      {/* Area Video */}
       <div className={styles.playerAreaWrapper}>
         <ClientInteractionHandler video={video} settings={settings} />
         <div className={styles.playerAspectRatioBox}>
@@ -39,7 +38,6 @@ export default async function VideoPlayerPage({ params }) {
         </div>
       </div>
 
-      {/* Info & Detail Bawah */}
       <div className={styles.infoSection}>
         <div className={styles.titleLineEllipsis}>{video.title}</div>
         <div className={styles.metaLineData}>
@@ -47,14 +45,12 @@ export default async function VideoPlayerPage({ params }) {
           <span><span className="material-icons" style={{fontSize:'16px'}}>event</span> {new Date(video.created_at).toLocaleDateString('id-ID')}</span>
         </div>
 
-        {/* Tombol Download */}
         <DownloadAdsHandler 
           videoId={video.video_id} 
           sourceType={video.source_type} 
           className={styles.downloadBtnFlatDesign} 
         />
 
-        {/* Iklan Bawah */}
         <div className={styles.nativeAdsBelowDetails} dangerouslySetInnerHTML={{ __html: settings?.ads_body }} />
         <div style={{ textAlign: 'center', marginTop: '30px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_footer }} />
       </div>
