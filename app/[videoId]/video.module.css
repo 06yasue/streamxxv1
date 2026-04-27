@@ -149,3 +149,21 @@
   margin-bottom: 5px; /* Potong jarak ke arah video biar mepet */
 }
 
+
+
+.ads-mobile-only {
+  display: block !important;
+}
+.ads-desktop-only {
+  display: none !important;
+}
+
+/* Jika layar lebih lebar dari 768px (Desktop/Tablet) */
+@media (min-width: 768px) {
+  .ads-mobile-only {
+    display: none !important;
+  }
+  .ads-desktop-only {
+    display: block !important;
+  }
+}
