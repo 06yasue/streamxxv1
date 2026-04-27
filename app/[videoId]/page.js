@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 import DownloadAdsHandler from './DownloadAdsHandler';
-import SafeAdSlot from './SafeAdSlot'; // MANGGIL MESIN PENJINAK IKLAN
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
@@ -19,19 +18,14 @@ export default async function VideoPlayerPage({ params }) {
 
   return (
     <>
-      {/* EKSEKUSI SCRIPT GLOBAL DENGAN AMAN */}
-      <SafeAdSlot htmlContent={settings?.script_head_global} />
-
-      {/* Iklan Atas (Mobile & Desktop Floating) */}
+      {/* Iklan Atas (Kembali pakai class original lo) */}
       <div className={styles.adsFloatingWrapper}>
-        <SafeAdSlot htmlContent={settings?.ads_mobile} className="ads-mobile-only" />
-        <SafeAdSlot htmlContent={settings?.ads_desktop} className="ads-desktop-only" />
+        <div className="ads-mobile-only" dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
+        <div className="ads-desktop-only" dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
       </div>
 
-      {/* SLOT ADS HEAD VIDEO (Atas Player) - Bebas pasang JS apa aja! */}
-      <div style={{ marginBottom: '15px' }}>
-        <SafeAdSlot htmlContent={settings?.ads_head_video} />
-      </div>
+      {/* INI SLOT BARU: ADS HEAD VIDEO (Atas Player) - Pakai cara aman bawaan lo */}
+      <div style={{ width: '100%', marginBottom: '15px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_head_video }} />
 
       {/* Area Video */}
       <div className={styles.playerAreaWrapper}>
@@ -53,6 +47,7 @@ export default async function VideoPlayerPage({ params }) {
           <span><span className="material-icons" style={{fontSize:'16px'}}>event</span> {new Date(video.created_at).toLocaleDateString('id-ID')}</span>
         </div>
 
+        {/* Tombol Download */}
         <DownloadAdsHandler 
           videoId={video.video_id} 
           sourceType={video.source_type} 
@@ -60,10 +55,8 @@ export default async function VideoPlayerPage({ params }) {
         />
 
         {/* Iklan Bawah */}
-        <SafeAdSlot htmlContent={settings?.ads_body} className={styles.nativeAdsBelowDetails} />
-        <div style={{ textAlign: 'center', marginTop: '30px' }}>
-          <SafeAdSlot htmlContent={settings?.ads_footer} />
-        </div>
+        <div className={styles.nativeAdsBelowDetails} dangerouslySetInnerHTML={{ __html: settings?.ads_body }} />
+        <div style={{ textAlign: 'center', marginTop: '30px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_footer }} />
       </div>
     </>
   );
