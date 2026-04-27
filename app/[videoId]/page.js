@@ -2,7 +2,8 @@ import { supabase } from '../../lib/supabaseClient';
 import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
-import DownloadAdsHandler from './DownloadAdsHandler'; // MANGGIL MESIN IKLAN DOWNLOAD
+import DownloadAdsHandler from './DownloadAdsHandler';
+import Script from 'next/script'; // TAMBAHAN WAJIB BUAT SCRIPT MONETAG
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
@@ -16,13 +17,34 @@ export default async function VideoPlayerPage({ params }) {
   
   if (!video) return notFound();
 
+  // MESIN PENGEKSTRAK SCRIPT: Buat ngakalin React biar script Monetag tetep jalan
+  const extractScriptSrc = (htmlString) => {
+    if (!htmlString) return null;
+    const match = htmlString.match(/src="([^"]+)"/);
+    return match ? match[1] : null;
+  };
+
+  const globalScriptSrc = extractScriptSrc(settings?.script_head_global);
+  const videoHeadScriptSrc = extractScriptSrc(settings?.ads_head_video);
+
   return (
     <>
-      {/* Iklan Atas */}
+      {/* EKSEKUSI SCRIPT MONETAG SECARA AMAN */}
+      {globalScriptSrc && <Script src={globalScriptSrc} strategy="afterInteractive" />}
+      {videoHeadScriptSrc && <Script src={videoHeadScriptSrc} strategy="afterInteractive" />}
+
+      {/* Iklan Atas (Mobile & Desktop Floating) */}
       <div className={styles.adsFloatingWrapper}>
         <div className="ads-mobile-only" dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
         <div className="ads-desktop-only" dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
       </div>
+
+      {/* INI DIA SLOT YANG HILANG: ADS HEAD VIDEO (ATAS PLAYER) */}
+      {/* Kalau isinya banner HTML biasa (bukan script), bakal muncul di sini */}
+      <div 
+        style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '15px' }} 
+        dangerouslySetInnerHTML={{ __html: settings?.ads_head_video }} 
+      />
 
       {/* Area Video */}
       <div className={styles.playerAreaWrapper}>
@@ -44,7 +66,7 @@ export default async function VideoPlayerPage({ params }) {
           <span><span className="material-icons" style={{fontSize:'16px'}}>event</span> {new Date(video.created_at).toLocaleDateString('id-ID')}</span>
         </div>
 
-        {/* TOMBOL DOWNLOAD DENGAN JEBAKAN IKLAN REWARDED */}
+        {/* TOMBOL DOWNLOAD (Udah pakai slot Link Offer) */}
         <DownloadAdsHandler 
           videoId={video.video_id} 
           sourceType={video.source_type} 
