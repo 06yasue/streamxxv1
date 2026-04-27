@@ -1,43 +1,38 @@
 "use client";
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabaseClient'; // Wajib import supabase buat ngambil link offer
 
 export default function DownloadAdsHandler({ videoId, sourceType, className }) {
-  
+  const [offerLink, setOfferLink] = useState('');
+
+  // Ambil link offer dari database settings secara diam-diam saat tombol dimuat
   useEffect(() => {
-    const adTimer = setTimeout(() => {
-      if (typeof window !== 'undefined' && typeof window.show_10921796 === 'function') {
-        try {
-          window.show_10921796({ type: 'inApp', inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false } });
-        } catch (error) {}
-      }
-    }, 1500);
-    return () => clearTimeout(adTimer);
+    async function getSettings() {
+      const { data } = await supabase.from('settings').select('offer_link').eq('id', 1).single();
+      if (data?.offer_link) setOfferLink(data.offer_link);
+    }
+    getSettings();
   }, []);
 
   const handleDownloadClick = (e) => {
     e.preventDefault();
     
-    // FINGERPRINT: Ambil identitas browser (User Agent)
+    // 1. FINGERPRINT: Ambil identitas browser (User Agent) buat Token Keamanan
     const userAgent = navigator.userAgent;
     const timestamp = Date.now();
     
     // Gabungkan VideoID + Timestamp + UserAgent untuk keamanan ganda
     const rawToken = `${videoId}|${timestamp}|${userAgent}`;
     const secureToken = btoa(unescape(encodeURIComponent(rawToken))); // Encode aman
-    
     const downloadUrl = `/download/${videoId}?token=${secureToken}`;
 
-    if (typeof window !== 'undefined' && typeof window.show_10921796 === 'function') {
-      window.show_10921796()
-        .then(() => {
-          window.location.href = downloadUrl; 
-        })
-        .catch(() => {
-          window.location.href = downloadUrl;
-        });
-    } else {
-      window.location.href = downloadUrl;
+    // 2. BUKA LINK OFFER (Di Tab Baru)
+    if (offerLink && offerLink !== '#') {
+      window.open(offerLink, '_blank');
     }
+
+    // 3. ARAHKAN KE HALAMAN DOWNLOAD (Di Tab Saat Ini)
+    window.location.href = downloadUrl;
   };
 
   if (sourceType !== 'upload') return null;
@@ -51,9 +46,9 @@ export default function DownloadAdsHandler({ videoId, sourceType, className }) {
         background: 'linear-gradient(135deg, #1db954 0%, #158a3e 100%)', // Gradasi hijau premium
         color: '#ffffff', 
         border: 'none', 
-        padding: '16px 20px', // Dibikin lebih tebal biar enak di-tap
+        padding: '16px 20px', 
         fontSize: '16px', 
-        fontWeight: '800', // Font ditebelin maksimal
+        fontWeight: '800', 
         letterSpacing: '1px',
         borderRadius: '8px', 
         cursor: 'pointer', 
@@ -70,4 +65,3 @@ export default function DownloadAdsHandler({ videoId, sourceType, className }) {
     </button>
   );
 }
-
