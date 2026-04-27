@@ -147,3 +147,14 @@
     padding-top: 25px;
     border-top: 1px dashed #333; /* Garis pembatas */
 }
+
+.adsFloatingWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px; /* Jarak antar iklan dideketin */
+  margin-top: 10px; /* Kasih jarak dikit ke navbar biar gak terlalu nempel atas */
+  margin-bottom: 5px; /* Potong jarak ke arah video biar mepet */
+}
+
