@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 import DownloadAdsHandler from './DownloadAdsHandler';
-import Script from 'next/script'; // TAMBAHAN WAJIB BUAT SCRIPT MONETAG
+import SafeAdSlot from './SafeAdSlot'; // MANGGIL MESIN PENJINAK IKLAN
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
@@ -17,34 +17,21 @@ export default async function VideoPlayerPage({ params }) {
   
   if (!video) return notFound();
 
-  // MESIN PENGEKSTRAK SCRIPT: Buat ngakalin React biar script Monetag tetep jalan
-  const extractScriptSrc = (htmlString) => {
-    if (!htmlString) return null;
-    const match = htmlString.match(/src="([^"]+)"/);
-    return match ? match[1] : null;
-  };
-
-  const globalScriptSrc = extractScriptSrc(settings?.script_head_global);
-  const videoHeadScriptSrc = extractScriptSrc(settings?.ads_head_video);
-
   return (
     <>
-      {/* EKSEKUSI SCRIPT MONETAG SECARA AMAN */}
-      {globalScriptSrc && <Script src={globalScriptSrc} strategy="afterInteractive" />}
-      {videoHeadScriptSrc && <Script src={videoHeadScriptSrc} strategy="afterInteractive" />}
+      {/* EKSEKUSI SCRIPT GLOBAL DENGAN AMAN */}
+      <SafeAdSlot htmlContent={settings?.script_head_global} />
 
       {/* Iklan Atas (Mobile & Desktop Floating) */}
       <div className={styles.adsFloatingWrapper}>
-        <div className="ads-mobile-only" dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
-        <div className="ads-desktop-only" dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
+        <SafeAdSlot htmlContent={settings?.ads_mobile} className="ads-mobile-only" />
+        <SafeAdSlot htmlContent={settings?.ads_desktop} className="ads-desktop-only" />
       </div>
 
-      {/* INI DIA SLOT YANG HILANG: ADS HEAD VIDEO (ATAS PLAYER) */}
-      {/* Kalau isinya banner HTML biasa (bukan script), bakal muncul di sini */}
-      <div 
-        style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: '15px' }} 
-        dangerouslySetInnerHTML={{ __html: settings?.ads_head_video }} 
-      />
+      {/* SLOT ADS HEAD VIDEO (Atas Player) - Bebas pasang JS apa aja! */}
+      <div style={{ marginBottom: '15px' }}>
+        <SafeAdSlot htmlContent={settings?.ads_head_video} />
+      </div>
 
       {/* Area Video */}
       <div className={styles.playerAreaWrapper}>
@@ -66,15 +53,17 @@ export default async function VideoPlayerPage({ params }) {
           <span><span className="material-icons" style={{fontSize:'16px'}}>event</span> {new Date(video.created_at).toLocaleDateString('id-ID')}</span>
         </div>
 
-        {/* TOMBOL DOWNLOAD (Udah pakai slot Link Offer) */}
         <DownloadAdsHandler 
           videoId={video.video_id} 
           sourceType={video.source_type} 
           className={styles.downloadBtnFlatDesign} 
         />
 
-        <div className={styles.nativeAdsBelowDetails} dangerouslySetInnerHTML={{ __html: settings?.ads_body }} />
-        <div style={{ textAlign: 'center', marginTop: '30px' }} dangerouslySetInnerHTML={{ __html: settings?.ads_footer }} />
+        {/* Iklan Bawah */}
+        <SafeAdSlot htmlContent={settings?.ads_body} className={styles.nativeAdsBelowDetails} />
+        <div style={{ textAlign: 'center', marginTop: '30px' }}>
+          <SafeAdSlot htmlContent={settings?.ads_footer} />
+        </div>
       </div>
     </>
   );
