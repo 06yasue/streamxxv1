@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import styles from './video.module.css';
 import ClientInteractionHandler from './ClientInteractionHandler'; 
 import DownloadAdsHandler from './DownloadAdsHandler';
-import AdHeadVideo from '../../components/AdHeadVideo'; // <--- IMPORT KOMPONENNYA
+import AdHeadVideo from '../../components/AdHeadVideo'; 
 
 export default async function VideoPlayerPage({ params }) {
   const { videoId } = await params;
@@ -19,12 +19,12 @@ export default async function VideoPlayerPage({ params }) {
 
   return (
     <>
+      {/* INI YANG DIUBAH: Panggilan class-nya pakai styles['nama-class'] */}
       <div className={styles.adsFloatingWrapper}>
-        <div className="ads-mobile-only" dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
-        <div className="ads-desktop-only" dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
+        <div className={styles['ads-mobile-only']} dangerouslySetInnerHTML={{ __html: settings?.ads_mobile }} />
+        <div className={styles['ads-desktop-only']} dangerouslySetInnerHTML={{ __html: settings?.ads_desktop }} />
       </div>
 
-      {/* PANGGIL KOMPONEN IKLAN LU DI SINI */}
       <AdHeadVideo />
 
       <div className={styles.playerAreaWrapper}>
