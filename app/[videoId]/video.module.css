@@ -60,15 +60,6 @@
     }
 }
 
-/* 3. AREA IKLAN & VIDEO */
-.adsFloatingWrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    padding: 15px 0;
-    background: transparent;
-}
 
 .playerAreaWrapper {
     width: 100%;
